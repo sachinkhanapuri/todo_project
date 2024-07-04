@@ -1,5 +1,5 @@
 services:
-  web:
+  web_image:
     build: .
     container_name: todo-app-container
     ports:

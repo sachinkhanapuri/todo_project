@@ -25,9 +25,9 @@ pipeline{
         }
         stage("deployment of application over ec2 instance"){
             steps{
-                sh "docker compose stop"
-                sh "docker compose down --remove-orphans --rmi all"
-                sh "docker compose up -d"
+                sh "docker-compose stop"
+                sh "docker-compose down --remove-orphans --rmi all"
+                sh "docker-compose up -d"
                 echo "code deployment successfully"
             }
         }

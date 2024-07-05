@@ -1,6 +1,6 @@
 services:
   web_image:
-    build: .
+    image: "sachinkhanapuri/todo_app_image:latest"
     container_name: todo-app-container
     ports:
       - 8000:8000

@@ -1,0 +1,35 @@
+pipeline{
+    agent any
+    stages{
+        stage("code checkin"){
+            steps{
+                git url : "https://github.com/sachinkhanapuri/todo_project.git" , branch:"main"
+                echo "code is check-in successfully"
+            }
+        }
+        stage("code build"){
+            steps{
+                sh "docker build -t todo_app_image ."
+                echo "code is build successfully"
+            }
+        }
+        stage("pushing the image into docker hub"){
+            steps{
+                withCredentials([usernamePassword(credentialsId:"dockerhubId",passwordVariable:"dockerhubpass",usernameVariable:"dockerhubusername")]){
+                sh "docker login -u ${env.dockerhubusername} -p ${env.dockerhubpass}"
+                sh "docker tag todo_app_image:latest ${env.dockerhubusername}/todo_app_image:latest"
+                sh "docker push ${env.dockerhubusername}/todo_app_image:latest"
+                }
+                echo "Build image and push to docker hub"
+            }
+        }
+        stage("deployment of application over ec2 instance"){
+            steps{
+                sh "docker compose stop"
+                sh "docker compose down --remove-orphans --rmi all"
+                sh "docker compose up -d"
+                echo "code deployment successfully"
+            }
+        }
+    }
+}
